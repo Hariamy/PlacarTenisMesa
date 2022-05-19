@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">PlacarTenisMesa</string>
+    <string name="app_bt_configurar_nome">Configurações</string>
+    <string name="app_bt_iniciar_nome">Iniciar Jogo</string>
+    <string name="app_bt_historico_nome">Historico</string>
+
+</resources>
