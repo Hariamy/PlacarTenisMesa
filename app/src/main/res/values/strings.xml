@@ -1,7 +1,13 @@
 <resources>
-    <string name="app_name">PlacarTenisMesa</string>
+    <string name="app_name">PLACAR DE TENIS DE MESA</string>
     <string name="app_bt_configurar_nome">Configurações</string>
     <string name="app_bt_iniciar_nome">Iniciar Jogo</string>
     <string name="app_bt_historico_nome">Historico</string>
-
+    <string-array name="app_config_quant_sets">
+        <item>1</item>
+        <item>3</item>
+        <item>5</item>
+        <item>7</item>
+        <item>9</item>
+    </string-array>
 </resources>

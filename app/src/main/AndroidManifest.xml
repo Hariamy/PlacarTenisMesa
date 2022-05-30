@@ -10,13 +10,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PlacarTenisMesa">
         <activity
-            android:name=".Historico"
+            android:name=".DetalhesPartidaActivity"
             android:exported="false" />
         <activity
-            android:name=".Placar"
+            android:name=".FimPartidaActivity"
+            android:exported="false"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".HistoricoActivity"
             android:exported="false" />
         <activity
-            android:name=".Configuracoes"
+            android:name=".PlacarActivity"
+            android:exported="false"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".ConfiguracoesActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
