@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".DetalhesPartidaActivity"
     tools:layout_editor_absoluteX="0dp"
+    android:background="@color/blueBack"
     tools:layout_editor_absoluteY="13dp">
 
     <TextView
