@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".DetalhesPartidaActivity"
     tools:layout_editor_absoluteX="0dp"
-    tools:layout_editor_absoluteY="0dp">
+    tools:layout_editor_absoluteY="13dp">
 
     <TextView
         android:id="@+id/tvPartidaDetalhes"
@@ -92,7 +92,7 @@
         app:layout_constraintEnd_toStartOf="@+id/tvGanhadorDetalhes"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView21"
+        app:layout_constraintTop_toBottomOf="@+id/tvDescricaoDetalhes"
         app:layout_constraintVertical_bias="0.042" />
 
     <TextView
@@ -125,6 +125,35 @@
         app:layout_constraintVertical_bias="0.061" />
 
     <TextView
+        android:id="@+id/tvSetsTotaisDetalhes"
+        android:layout_width="150sp"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/textView10"
+        app:layout_constraintTop_toBottomOf="@+id/tvPlacarDetalhes"
+        app:layout_constraintVertical_bias="0.051" />
+
+    <TextView
+        android:id="@+id/textView10"
+        android:layout_width="100sp"
+        android:layout_height="wrap_content"
+        android:text="Sets totais"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/tvSetsTotaisDetalhes"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView26"
+        app:layout_constraintVertical_bias="0.051" />
+
+    <TextView
         android:id="@+id/tvPerdedorDetalhes"
         android:layout_width="150sp"
         android:layout_height="wrap_content"
@@ -142,7 +171,7 @@
         android:id="@+id/textView25"
         android:layout_width="100sp"
         android:layout_height="wrap_content"
-        android:text="Perdedor"
+        android:text="Adversário"
         android:textAlignment="center"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -163,64 +192,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView26"
-        app:layout_constraintVertical_bias="0.083" />
-
-    <TextView
-        android:id="@+id/tvPerdedorPontosDetalhes"
-        android:layout_width="150sp"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/tvGanhadorPontosDetalhes"
-        app:layout_constraintTop_toBottomOf="@+id/tvPerdedorNomesDetalhes"
-        app:layout_constraintVertical_bias="0.037" />
-
-    <TextView
-        android:id="@+id/tvSetDetalhes"
-        android:layout_width="80sp"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/tvGanhadorPontosDetalhes"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView34"
-        app:layout_constraintVertical_bias="0.037" />
-
-    <TextView
-        android:id="@+id/tvGanhadorPontosDetalhes"
-        android:layout_width="150sp"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/tvPerdedorPontosDetalhes"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/tvSetDetalhes"
-        app:layout_constraintTop_toBottomOf="@+id/tvGanhadorNomeDetalhes"
-        app:layout_constraintVertical_bias="0.037" />
-
-    <TextView
-        android:id="@+id/tvPerdedorNomesDetalhes"
-        android:layout_width="150sp"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/tvGanhadorNomeDetalhes"
-        app:layout_constraintTop_toBottomOf="@+id/textView29"
-        app:layout_constraintVertical_bias="0.051" />
+        app:layout_constraintTop_toBottomOf="@+id/tvSetsTotaisDetalhes"
+        app:layout_constraintVertical_bias="0.068" />
 
     <TextView
         android:id="@+id/textView34"
@@ -235,11 +208,25 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView29"
-        app:layout_constraintVertical_bias="0.051" />
+        app:layout_constraintVertical_bias="0.056" />
+
+    <TextView
+        android:id="@+id/tvGanhadorPontosDetalhes"
+        android:layout_width="140sp"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/tvPerdedorPontosDetalhes"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/tvSetDetalhes"
+        app:layout_constraintTop_toBottomOf="@+id/tvGanhadorNomeDetalhes"
+        app:layout_constraintVertical_bias="0.034" />
 
     <TextView
         android:id="@+id/tvGanhadorNomeDetalhes"
-        android:layout_width="150sp"
+        android:layout_width="140sp"
         android:layout_height="wrap_content"
         android:text="TextView"
         android:textAlignment="center"
@@ -249,6 +236,48 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/textView34"
         app:layout_constraintTop_toBottomOf="@+id/textView29"
-        app:layout_constraintVertical_bias="0.051" />
+        app:layout_constraintVertical_bias="0.056" />
+
+    <TextView
+        android:id="@+id/tvPerdedorNomesDetalhes"
+        android:layout_width="140sp"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/tvGanhadorNomeDetalhes"
+        app:layout_constraintTop_toBottomOf="@+id/textView29"
+        app:layout_constraintVertical_bias="0.056" />
+
+    <TextView
+        android:id="@+id/tvSetDetalhes"
+        android:layout_width="80sp"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/tvGanhadorPontosDetalhes"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView34"
+        app:layout_constraintVertical_bias="0.034" />
+
+    <TextView
+        android:id="@+id/tvPerdedorPontosDetalhes"
+        android:layout_width="140sp"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/tvGanhadorPontosDetalhes"
+        app:layout_constraintTop_toBottomOf="@+id/tvPerdedorNomesDetalhes"
+        app:layout_constraintVertical_bias="0.034" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

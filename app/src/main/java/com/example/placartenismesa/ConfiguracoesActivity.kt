@@ -49,6 +49,11 @@ class ConfiguracoesActivity : AppCompatActivity() {
             configuracoes.nome_partida = etNomePartida.text.toString()
         }
 
+        val etDescricao = findViewById<EditText>(R.id.etDescricao)
+        etDescricao.addTextChangedListener{
+            configuracoes.descricao = etDescricao.text.toString()
+        }
+
 
         // -------------- CONGIGURA OS BOTOES DE SELEÇÃO DE QUEM INICIA SACANDO -------------- //
 
@@ -128,7 +133,7 @@ class ConfiguracoesActivity : AppCompatActivity() {
             configuracoes = oos.readObject() as Configuracoes
             Log.v("SMD", configuracoes.nome_jogador_1)
         } else {
-            configuracoes = Configuracoes("", "","", "", Constantes.JOGADOR_1, Constantes.INDEFINIDO, Constantes.INDEFINIDO, Constantes.INDEFINIDO )
+            configuracoes = Configuracoes("", "","", "", Constantes.INDEFINIDO, Constantes.INDEFINIDO, Constantes.INDEFINIDO, Constantes.INDEFINIDO )
         }
 
     }
@@ -142,6 +147,8 @@ class ConfiguracoesActivity : AppCompatActivity() {
         val etNomePartida = findViewById<EditText>(R.id.etNamePartida)
         etNomePartida.setText(configuracoes.nome_partida)
 
+        val etDescricao = findViewById<EditText>(R.id.etDescricao)
+        etDescricao.setText(configuracoes.descricao)
 
         // -------------- CONGIGURA OS BOTOES DE SELEÇÃO DE QUEM INICIA SACANDO -------------- //
 

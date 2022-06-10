@@ -3,12 +3,19 @@ package com.example.placartenismesa
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.os.*
 import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.util.Log
 import android.view.View
+import android.widget.Button
+import android.widget.Chronometer
+import android.widget.ImageView
 import android.widget.TextView
-import data.*
+import androidx.annotation.RequiresApi
+import androidx.core.content.getSystemService
+import data.Configuracoes
+import data.Constantes
+import data.Jogador
+import data.Placar
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.ObjectInputStream
@@ -19,8 +26,7 @@ class PlacarActivity : AppCompatActivity() {
     lateinit var placar:Placar
     lateinit var configuracoes: Configuracoes
 
-    var saque = Constantes.INDEFINIDO
-    var pontosMarcados = 0
+    var placaresAnteriores = ArrayList<Placar>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,14 +42,11 @@ class PlacarActivity : AppCompatActivity() {
 
 
     fun initPlacar(){
-
         val jogador1 = Jogador(configuracoes.nome_jogador_1, mutableListOf(0, 0, 0, 0, 0, 0, 0, 0, 0), 0, configuracoes.lado_inicial_jogador1)
         val jogador2 = Jogador(configuracoes.nome_jogador_2, mutableListOf(0, 0, 0, 0, 0, 0, 0, 0, 0), 0, configuracoes.lado_inicial_jogador2)
 
-        placar = Placar(configuracoes.nome_partida,configuracoes.descricao, jogador1, jogador2, 1, configuracoes.inicia_sacando)
-
-        saque = configuracoes.inicia_sacando
-
+        placar = Placar(configuracoes.nome_partida,configuracoes.descricao, jogador1, jogador2, 1, configuracoes.inicia_sacando, configuracoes.sets, configuracoes.inicia_sacando, 0)
+        salvaPlacar()
         configInterface()
 
     }
@@ -51,37 +54,41 @@ class PlacarActivity : AppCompatActivity() {
     fun configInterface() {
         val tvJogadorEsquerda = findViewById<TextView>(R.id.tvJogadorEsquerda)
         val tvJogadorDireita = findViewById<TextView>(R.id.tvJogadorDireita)
-        val tvSaqueDireita = findViewById<TextView>(R.id.tvSaqueDireita)
-        val tvSaqueEsquerda = findViewById<TextView>(R.id.tvSaqueEsquerda)
+        val ivDeveSacarDireita = findViewById<ImageView>(R.id.ivDeveSacarDireita)
+        val ivDeveSacarEsquerda = findViewById<ImageView>(R.id.ivDeveSacarEsquerda)
         val tvPlacarDireita = findViewById<TextView>(R.id.tvPlacarDireita)
         val tvPlacarEsquerda = findViewById<TextView>(R.id.tvPlacarEsquerda)
         val tvSetJogadorEsquerda = findViewById<TextView>(R.id.tvSetJogadorEsquerda)
         val tvSetJogadorDireita = findViewById<TextView>(R.id.tvSetJogadorDireita)
+        val btDesfazer = findViewById<Button>(R.id.btDesfazerJodada)
 
-        // --------- ZERA O PLACAR --------- //
-        tvPlacarDireita.text = "0"
-        tvPlacarEsquerda.text = "0"
 
-        // --------- SETA OS NOMES DE CADA JOGADOR --------- //
+        // --------- SETA OS NOMES DE CADA JOGADOR E PLACAR--------- //
         if (placar.jogador_1.lado_mesa == Constantes.ESQUERDA) {
             tvJogadorEsquerda.setText(placar.jogador_1.nome)
+            tvPlacarEsquerda.text = placar.jogador_1.pontos.get(placar.set_atual-1).toString()
+
             tvJogadorDireita.setText(placar.jogador_2.nome)
+            tvPlacarDireita.text = placar.jogador_2.pontos.get(placar.set_atual-1).toString()
         } else {
             tvJogadorEsquerda.setText(placar.jogador_2.nome)
+            tvPlacarEsquerda.text = placar.jogador_2.pontos.get(placar.set_atual-1).toString()
+
             tvJogadorDireita.setText(placar.jogador_1.nome)
+            tvPlacarDireita.text = placar.jogador_1.pontos.get(placar.set_atual-1).toString()
+
         }
 
         // --------- CONFIGURA QUEM DEVE SACAR --------- //
-        if ((configuracoes.inicia_sacando == Constantes.JOGADOR_1 && placar.jogador_1.lado_mesa == Constantes.ESQUERDA) ||
-            (configuracoes.inicia_sacando == Constantes.JOGADOR_2 && placar.jogador_2.lado_mesa == Constantes.ESQUERDA)) {
+        if ((placar.saque == Constantes.JOGADOR_1 && placar.jogador_1.lado_mesa == Constantes.ESQUERDA) ||
+            (placar.saque == Constantes.JOGADOR_2 && placar.jogador_2.lado_mesa == Constantes.ESQUERDA)) {
 
-            tvSaqueDireita.text = ""
-            tvSaqueEsquerda.text = "DEVE SACAR"
+            ivDeveSacarDireita.visibility = View.INVISIBLE
+            ivDeveSacarEsquerda.visibility = View.VISIBLE
 
         } else {
-
-            tvSaqueDireita.text = "DEVE SACAR"
-            tvSaqueEsquerda.text = ""
+            ivDeveSacarDireita.visibility = View.VISIBLE
+            ivDeveSacarEsquerda.visibility = View.INVISIBLE
 
         }
 
@@ -94,9 +101,78 @@ class PlacarActivity : AppCompatActivity() {
             tvSetJogadorDireita.setText(placar.jogador_1.cont_set_ganho.toString())
         }
 
+
+        btDesfazer.visibility = View.INVISIBLE
+
+        if (placaresAnteriores.size > 1) {
+            btDesfazer.visibility = View.VISIBLE
+        }
     }
 
+    fun copyJogador(j: Jogador): Jogador {
+        return Jogador(
+            j.nome,
+            mutableListOf(
+                j.pontos.get(0),
+                j.pontos.get(1),
+                j.pontos.get(2),
+                j.pontos.get(3),
+                j.pontos.get(4),
+                j.pontos.get(5),
+                j.pontos.get(6),
+                j.pontos.get(7),
+                j.pontos.get(8)
+            ),
+            j.cont_set_ganho,
+            j.lado_mesa
+        )
+    }
+    fun copyPlacar(p: Placar) : Placar {
+        val novoPlacar =  Placar(
+            p.nome_partida,
+            p.descricao,
+            copyJogador(p.jogador_1),
+            copyJogador(p.jogador_2),
+            p.set_atual, p.ganhador, p.sets, p.saque, p.pontosMarcados
+        )
+        return novoPlacar
+    }
+
+    fun salvaPlacar() {
+
+        val btDesfazer = findViewById<Button>(R.id.btDesfazerJodada)
+        if (placaresAnteriores.size > 0) {
+            btDesfazer.visibility = View.VISIBLE
+        }
+
+        if (placaresAnteriores.size == 5){
+            placaresAnteriores.removeAt(0)
+        }
+        placaresAnteriores.add(
+            copyPlacar(placar)
+        )
+
+    }
+
+    fun desfazerJodada(v: View) {
+        if (placaresAnteriores.size > 0) {
+
+            placaresAnteriores.removeAt(placaresAnteriores.size-1)
+            placar = copyPlacar(placaresAnteriores.get(placaresAnteriores.size-1))
+
+            configInterface()
+
+        } else {
+            v.visibility = View.INVISIBLE
+
+        }
+
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
     fun checkGanhador(index: Int) {
+        salvaPlacar()
+
         var houve_ganhador = false
 
         if (placar.jogador_1.pontos.get(index) == 11) {
@@ -110,22 +186,70 @@ class PlacarActivity : AppCompatActivity() {
         }
 
         if (houve_ganhador) {
-
             if (checkFimPartida()) {
-
-                salvaResultado()
-                val intent = Intent(this, FimPartidaActivity::class.java).apply {
-                    putExtra(Constantes.PLACAR, placar)
-                }
-                startActivity(intent)
+                configFimPartida()
 
             } else {
-
                 placar.set_atual += 1
-
-                setContentView(R.layout.activity_placar_intervalo)
+                configIntervalo()
             }
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    fun configIntervalo() {
+        setContentView(R.layout.activity_placar_intervalo)
+
+        var cronometro = findViewById<Chronometer>(R.id.crContIntervalo)
+
+        val btVoltarIntervalo = findViewById<Button>(R.id.btVoltarIntervalo)
+        btVoltarIntervalo.visibility = View.INVISIBLE
+
+        cronometro.setCountDown(true)
+        cronometro.setBase(SystemClock.elapsedRealtime() +  Constantes.UM_MINUTO)
+        cronometro.setOnChronometerTickListener {
+            if (cronometro.text.toString() ==  "00:00") {
+                cronometro.stop()
+                vibrar()
+                val intervalo = findViewById<TextView>(R.id.tvIntervalo)
+                intervalo.setText("FIM DO INTERVALO")
+
+                btVoltarIntervalo.visibility = View.VISIBLE
+
+            }
+
+        }
+        cronometro.start()
+
+    }
+
+    fun vibrar (){
+        val buzzer = this.getSystemService<Vibrator>()
+        val pattern = longArrayOf(0, 200, 100, 300)
+        buzzer?.let {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                buzzer.vibrate(VibrationEffect.createWaveform(pattern, -1))
+            } else {
+                buzzer.vibrate(pattern, -1)
+            }
+        }
+
+    }
+
+    fun configFimPartida() {
+        salvaResultado()
+
+        setContentView(R.layout.activity_placar_final)
+        var ganhador = placar.jogador_1
+        if (placar.ganhador == Constantes.JOGADOR_2) ganhador = placar.jogador_2
+
+        val tvGanhador = findViewById<TextView>(R.id.tvGanhador)
+        tvGanhador.setText(ganhador.nome)
+
+        val tvResultado = findViewById<TextView>(R.id.tvResultado)
+        val text = ganhador.cont_set_ganho.toString() + " X " + (placar.set_atual - ganhador.cont_set_ganho).toString()
+        tvResultado.setText(text)
+
     }
 
     fun salvaResultado() {
@@ -188,9 +312,9 @@ class PlacarActivity : AppCompatActivity() {
 
         val setAtual = placar.set_atual
 
-        Log.v("SMD", "set: "+ setAtual.toString() +"  " +sets_jogador_1.toString() + "  " + sets_jogador_2.toString())
+        val ganhou_mais = if (sets_jogador_1 > sets_jogador_2) sets_jogador_1 else sets_jogador_2
 
-        if (setAtual == configuracoes.sets) {
+        if (setAtual == configuracoes.sets || ganhou_mais > configuracoes.sets/2) {
             if (sets_jogador_1 > sets_jogador_2 ){
                 placar.ganhador = Constantes.JOGADOR_1
                 return true
@@ -202,8 +326,9 @@ class PlacarActivity : AppCompatActivity() {
         return false
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     fun addPlacarEsquerda(v: View) {
-        pontosMarcados += 1
+        placar.pontosMarcados += 1
         setSaque()
 
         val tvPlacarEsquerda = findViewById<TextView>(R.id.tvPlacarEsquerda)
@@ -223,8 +348,9 @@ class PlacarActivity : AppCompatActivity() {
         checkGanhador(index)
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     fun addPlacarDireita(v: View) {
-        pontosMarcados += 1
+        placar.pontosMarcados += 1
         setSaque()
 
         val tvPlacarDireita = findViewById<TextView>(R.id.tvPlacarDireita)
@@ -244,30 +370,36 @@ class PlacarActivity : AppCompatActivity() {
         checkGanhador(index)
     }
 
+    fun voltarInicio(v: View) {
+        val intent = Intent(this, ConfiguracoesActivity::class.java).apply {}
+        startActivity(intent)
+    }
+
     fun setSaque() {
-        if (pontosMarcados%2 == 0) {
-            val tvSaqueDireita = findViewById<TextView>(R.id.tvSaqueDireita)
-            val tvSaqueEsquerda = findViewById<TextView>(R.id.tvSaqueEsquerda)
+        if (placar.pontosMarcados%2 == 0) {
 
-            if (saque == Constantes.JOGADOR_1) {
-                saque = Constantes.JOGADOR_2
+            val ivDeveSacarDireita = findViewById<ImageView>(R.id.ivDeveSacarDireita)
+            val ivDeveSacarEsquerda = findViewById<ImageView>(R.id.ivDeveSacarEsquerda)
+
+            if (placar.saque == Constantes.JOGADOR_1) {
+                placar.saque = Constantes.JOGADOR_2
                 if (placar.jogador_1.lado_mesa == Constantes.ESQUERDA) {
-                    tvSaqueDireita.text = "DEVE SACAR"
-                    tvSaqueEsquerda.text = ""
-
+                    ivDeveSacarDireita.visibility = View.VISIBLE
+                    ivDeveSacarEsquerda.visibility = View.INVISIBLE
                 } else {
-                    tvSaqueDireita.text = ""
-                    tvSaqueEsquerda.text = "DEVE SACAR"
+                    ivDeveSacarDireita.visibility = View.INVISIBLE
+                    ivDeveSacarEsquerda.visibility = View.VISIBLE
                 }
             } else {
-                saque = Constantes.JOGADOR_1
+                placar.saque = Constantes.JOGADOR_1
                 if (placar.jogador_2.lado_mesa == Constantes.ESQUERDA) {
-                    tvSaqueDireita.text = "DEVE SACAR"
-                    tvSaqueEsquerda.text = ""
+                    ivDeveSacarDireita.visibility = View.VISIBLE
+                    ivDeveSacarEsquerda.visibility = View.INVISIBLE
 
                 } else {
-                    tvSaqueDireita.text = ""
-                    tvSaqueEsquerda.text = "DEVE SACAR"
+                    ivDeveSacarDireita.visibility = View.INVISIBLE
+                    ivDeveSacarEsquerda.visibility = View.VISIBLE
+
                 }
             }
         }
@@ -282,11 +414,14 @@ class PlacarActivity : AppCompatActivity() {
             configuracoes.inicia_sacando = Constantes.JOGADOR_1
         }
 
-        saque = configuracoes.inicia_sacando
+        placar.saque = configuracoes.inicia_sacando
 
         val lado_jogador_1 = placar.jogador_1.lado_mesa
         placar.jogador_1.lado_mesa = placar.jogador_2.lado_mesa
         placar.jogador_2.lado_mesa = lado_jogador_1
+
+        placaresAnteriores = ArrayList()
+        placaresAnteriores.add(placar)
 
         configInterface()
     }

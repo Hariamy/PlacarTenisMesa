@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.placartenismesa.DetalhesPartidaActivity
@@ -71,7 +72,7 @@ class CustomAdapter(private val mList: List<Placar>) : RecyclerView.Adapter<Cust
         val ganhador: TextView = ItemView.findViewById(R.id.tvGanhadorCard)
         val placar: TextView = ItemView.findViewById(R.id.tvPlacarCard)
 
-        val lnCell: LinearLayout = ItemView.findViewById(R.id.inCell)
+        val lnCell: ConstraintLayout = ItemView.findViewById(R.id.inCell)
         val context = ItemView.context
     }
 }

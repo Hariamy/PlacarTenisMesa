@@ -12,5 +12,8 @@ data class Placar(
     var set_atual:Int,
     var ganhador:Int,
 
+    var sets:Int,
+    var saque:Int,
+    var pontosMarcados:Int
 
     ):Serializable

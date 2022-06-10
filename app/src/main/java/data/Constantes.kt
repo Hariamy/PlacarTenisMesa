@@ -11,5 +11,6 @@ object Constantes {
     const val HISTORICO = "historico";
     const val TEM_RESULTADO_ANTERIOR = "haAnteriores"
     const val VETOR_NOMES_PLACAR = "vetorNomesPlacar"
-
+    const val UM_MINUTO = 60000
+    const val CINCO_SEGUNDOS = 5000
 }

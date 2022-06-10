@@ -34,14 +34,16 @@ class DetalhesPartidaActivity : AppCompatActivity() {
         val tvPerdedorNomePontos = findViewById<TextView>(R.id.tvPerdedorNomesDetalhes)
         val tvPerdedorPontos = findViewById<TextView>(R.id.tvPerdedorPontosDetalhes)
         val tvSets = findViewById<TextView>(R.id.tvSetDetalhes)
+        val tvSetsTotais = findViewById<TextView>(R.id.tvSetsTotaisDetalhes)
 
         tvPartida.text = placar.nome_partida
         tvDescricao.text = placar.descricao
         tvGanhador.text = ganhador.nome
         tvPerdedor.text = perdedor.nome
-        tvPlacar.text = ganhador.cont_set_ganho.toString() + " X " + perdedor.cont_set_ganho.toString()
+        tvPlacar.text = ganhador.cont_set_ganho.toString() +" X "+ perdedor.cont_set_ganho.toString()
         tvGanhadorNomePontos.text = ganhador.nome
         tvPerdedorNomePontos.text = perdedor.nome
+        tvSetsTotais.text = placar.sets.toString()
 
         var pontosGanhador = ""
         var setDetalhes = ""
